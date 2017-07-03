@@ -18,32 +18,32 @@ class ASGNewTaskViewController: UIViewController, UITableViewDelegate, UITextVie
     // Function to add a task to the iCloud database
     func addTask() {
         
-        navigationController?.popViewControllerAnimated(true)
+        navigationController?.popViewController(animated: true)
         
         // Create record to save tasks
         var record: CKRecord = CKRecord(recordType: "task")
         // Save task description for key: taskKey
-        record.setObject(self.taskDescriptionTextView.text, forKey: "taskKey")
+        record.setObject(self.taskDescriptionTextView.text as CKRecordValue?, forKey: "taskKey")
         // Create the private database for the user to save their data to
-        var database: CKDatabase = CKContainer.defaultContainer().privateCloudDatabase
+        var database: CKDatabase = CKContainer.default().privateCloudDatabase
         
         // Save the data to the database for the record: task
-        func recordSaved(record: CKRecord?, error: NSError?) {
+        func recordSaved(_ record: CKRecord?, error: NSError?) {
             if (error != nil) {
                 // handle it
-                println(error)
+                
             }
         }
         
         // Save data to the database for the record: task
-        database.saveRecord(record, completionHandler: recordSaved)
+        database.save(record, completionHandler: recordSaved as! (CKRecord?, Error?) -> Void)
     }
     
     // MARK: Lifecycle
     override func viewDidLoad() {
         
         // Create done button to add a task
-        var doneButton: UIBarButtonItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Plain, target: self, action: Selector("addTask"))
+        let doneButton: UIBarButtonItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.plain, target: self, action: #selector(ASGNewTaskViewController.addTask))
         self.navigationItem.rightBarButtonItem = doneButton
         
         self.taskDescriptionTextView.becomeFirstResponder()
